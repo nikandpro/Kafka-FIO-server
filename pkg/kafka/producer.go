@@ -12,7 +12,13 @@ import (
 func Produce(ctx context.Context) {
 	fmt.Println("produce")
 	i := 0
-
+	jso := `
+	{
+		"name": "John",
+		"surname": "Doe",
+		"patronymic": "Jonson"
+	}
+	`
 	conf := kafka.WriterConfig{
 		Brokers: []string{"localhost:9092"},
 		Topic:   "FIO",
@@ -23,7 +29,7 @@ func Produce(ctx context.Context) {
 	for {
 		err := writer.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(strconv.Itoa(i)),
-			Value: []byte("this is Message: " + strconv.Itoa(i)),
+			Value: []byte(jso),
 		})
 		if err != nil {
 			fmt.Println("Some produce eroor: ", err)

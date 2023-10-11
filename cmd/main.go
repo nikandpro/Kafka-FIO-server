@@ -13,6 +13,7 @@ func main() {
 	ctx := context.Background()
 	dataKafka := make(chan string, 10)
 	failDataKafka := make(chan string, 10)
+
 	go appKafka.Produce(ctx)
 
 	service := service.NewService(ctx, dataKafka, failDataKafka)
@@ -24,5 +25,8 @@ func main() {
 	}()
 
 	appKafka.Consume(ctx, dataKafka)
+
+	// person := mysql.Person{}
+	// fmt.Println(person)
 
 }
