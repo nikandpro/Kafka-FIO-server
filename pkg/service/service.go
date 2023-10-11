@@ -9,8 +9,8 @@ import (
 type Service struct {
 	ctx context.Context
 
-	inputKafka     chan string
-	failQueueKafka chan string
+	dataKafka     chan []byte
+	failDataKafka chan string
 }
 
 type Person struct {
@@ -19,20 +19,20 @@ type Person struct {
 	Patronymic string `json:"patronymic"`
 }
 
-func NewService(ctx context.Context, in chan string, fail chan string) *Service {
-	return &Service{ctx: ctx, inputKafka: in, failQueueKafka: fail}
+func NewService(ctx context.Context, data chan []byte, failData chan string) *Service {
+	return &Service{ctx: ctx, dataKafka: data, failDataKafka: failData}
 }
 
 func (s *Service) StartService() error {
 	fmt.Println("Start service...")
 
-	for k := range s.inputKafka {
+	for k := range s.dataKafka {
 
-		person, err := s.serializationJSON(k)
+		person, err := s.serializationJSON(string(k))
 		if err != nil {
 			return err
 		}
-		fmt.Println("kafka message: ", k, "person = ", person)
+		fmt.Println("kafka message: ", string(k), "person = ", person)
 	}
 
 	return nil

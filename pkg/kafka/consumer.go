@@ -7,7 +7,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func Consume(ctx context.Context, dataKafka chan string) {
+func Consume(ctx context.Context, dataKafka chan []byte) {
 	fmt.Println("consume...")
 
 	conf := kafka.ReaderConfig{
@@ -23,7 +23,7 @@ func Consume(ctx context.Context, dataKafka chan string) {
 		if err != nil {
 			fmt.Print("Consume error: ", err)
 		}
-		dataKafka <- string(m.Value)
+		dataKafka <- m.Value
 		// fmt.Println("Message is: ", string(m.Value))
 	}
 }

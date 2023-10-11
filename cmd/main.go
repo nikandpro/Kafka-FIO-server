@@ -11,7 +11,7 @@ import (
 func main() {
 	fmt.Println("start main...")
 	ctx := context.Background()
-	dataKafka := make(chan string, 10)
+	dataKafka := make(chan []byte, 10)
 	failDataKafka := make(chan string, 10)
 
 	go appKafka.Produce(ctx)
