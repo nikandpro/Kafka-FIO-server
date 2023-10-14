@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
+
+	"github.com/nikandpro/kafka-fio-server/pkg/database"
 )
 
 type Service struct {
@@ -11,16 +12,12 @@ type Service struct {
 
 	dataKafka     chan []byte
 	failDataKafka chan string
+
+	db database.Database
 }
 
-type Person struct {
-	Name       string `json:"name"`
-	Surname    string `json:"surname"`
-	Patronymic string `json:"patronymic"`
-}
-
-func NewService(ctx context.Context, data chan []byte, failData chan string) *Service {
-	return &Service{ctx: ctx, dataKafka: data, failDataKafka: failData}
+func NewService(ctx context.Context, data chan []byte, failData chan string, db database.Database) *Service {
+	return &Service{ctx: ctx, dataKafka: data, failDataKafka: failData, db: db}
 }
 
 func (s *Service) StartService() error {
@@ -28,23 +25,24 @@ func (s *Service) StartService() error {
 
 	for k := range s.dataKafka {
 
-		person, err := s.serializationJSON(string(k))
+		err := s.db.Create(k)
 		if err != nil {
+			fmt.Println("StartService error", err)
 			return err
 		}
-		fmt.Println("kafka message: ", string(k), "person = ", person)
+		// fmt.Println("kafka message: ", string(k))
 	}
 
 	return nil
 }
 
-func (s *Service) serializationJSON(str string) (Person, error) {
-	person := Person{}
+// func (s *Service) serializationJSON(str string) (Person, error) {
+// 	person := Person{}
 
-	err := json.Unmarshal([]byte(str), &person)
-	if err != nil {
-		fmt.Println("serializ error", err)
+// 	err := json.Unmarshal([]byte(str), &person)
+// 	if err != nil {
+// 		fmt.Println("serializ error", err)
 
-	}
-	return person, nil
-}
+// 	}
+// 	return person, nil
+// }

@@ -1,8 +1,8 @@
 package database
 
 type Database interface {
-	Get()
-	Create()
+	Get() error
+	Create([]byte) error
 	// Delete(id string)
 	// Update(id string)
 }
