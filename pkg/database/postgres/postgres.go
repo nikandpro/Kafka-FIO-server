@@ -2,10 +2,13 @@ package postgres
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 	"github.com/nikandpro/kafka-fio-server/pkg/config"
+	"github.com/nikandpro/kafka-fio-server/pkg/database"
 )
 
 func init() {
@@ -22,13 +25,6 @@ func init() {
 
 type PostgresDB struct {
 	connection *sql.DB
-}
-
-type User struct {
-	ID         int64  `json:"id"`
-	Name       string `json:"name"`
-	Surname    string `json:"surname"`
-	Patronymic string `json:"patronymic"`
 }
 
 func New(cfg *config.Config) (*PostgresDB, error) {
@@ -49,10 +45,10 @@ func (db *PostgresDB) Get() error {
 		return err
 	}
 	defer rows.Close()
-	users := []User{}
+	users := []database.User{}
 
 	for rows.Next() {
-		u := User{}
+		u := database.User{}
 		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic)
 		if err != nil {
 			fmt.Println("error get next", err)
@@ -68,8 +64,20 @@ func (db *PostgresDB) Get() error {
 	return nil
 }
 
-func (conn *PostgresDB) Create(json []byte) error {
+func (db *PostgresDB) Create(json []byte) error {
 	fmt.Println("create:")
 	fmt.Println(string(json))
 	return nil
+}
+
+func (db *PostgresDB) IsCorrect(str []byte) (database.User, error) {
+	user := database.User{}
+
+	err := json.Unmarshal([]byte(str), &user)
+	if err != nil {
+		log.Fatal(err)
+		return user, err
+
+	}
+	return user, nil
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/nikandpro/kafka-fio-server/pkg/database"
 )
@@ -25,24 +26,19 @@ func (s *Service) StartService() error {
 
 	for k := range s.dataKafka {
 
-		err := s.db.Create(k)
+		user, err := s.db.IsCorrect(k)
 		if err != nil {
-			fmt.Println("StartService error", err)
+			log.Fatal("NotCorrect user", err)
 			return err
 		}
+
+		s.enrichment(user)
 		// fmt.Println("kafka message: ", string(k))
 	}
 
 	return nil
 }
 
-// func (s *Service) serializationJSON(str string) (Person, error) {
-// 	person := Person{}
+func (s *Service) enrichment(database.User) {
 
-// 	err := json.Unmarshal([]byte(str), &person)
-// 	if err != nil {
-// 		fmt.Println("serializ error", err)
-
-// 	}
-// 	return person, nil
-// }
+}
