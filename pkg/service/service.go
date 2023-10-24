@@ -26,9 +26,9 @@ func (s *Service) StartService() error {
 
 	for k := range s.dataKafka {
 
-		user, err := s.db.IsCorrect(k)
+		user, err := IsCorrect(k)
 		if err != nil {
-			log.Fatal("NotCorrect user", err)
+			log.Fatal("Not Correct user", err)
 			return err
 		}
 
@@ -37,8 +37,4 @@ func (s *Service) StartService() error {
 	}
 
 	return nil
-}
-
-func (s *Service) enrichment(database.User) {
-
 }

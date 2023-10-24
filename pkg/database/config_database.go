@@ -3,8 +3,6 @@ package database
 type Database interface {
 	Get() error
 	Create([]byte) error
-	IsCorrect(str []byte) (User, error)
-	// IsCorrect(str []byte) (User, error)
 	// Delete(id string)
 	// Update(id string)
 }

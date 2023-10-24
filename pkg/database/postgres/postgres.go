@@ -2,9 +2,7 @@ package postgres
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq"
 	"github.com/nikandpro/kafka-fio-server/pkg/config"
@@ -68,16 +66,4 @@ func (db *PostgresDB) Create(json []byte) error {
 	fmt.Println("create:")
 	fmt.Println(string(json))
 	return nil
-}
-
-func (db *PostgresDB) IsCorrect(str []byte) (database.User, error) {
-	user := database.User{}
-
-	err := json.Unmarshal([]byte(str), &user)
-	if err != nil {
-		log.Fatal(err)
-		return user, err
-
-	}
-	return user, nil
 }
