@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/nikandpro/kafka-fio-server/pkg/config"
 	"github.com/nikandpro/kafka-fio-server/pkg/database/postgres"
 	appKafka "github.com/nikandpro/kafka-fio-server/pkg/kafka"
 	"github.com/nikandpro/kafka-fio-server/pkg/service"
@@ -11,9 +13,15 @@ import (
 
 func main() {
 	fmt.Println("start main...")
-	db, err := postgres.New()
+
+	cfg, err := config.Init()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
+	}
+
+	db, err := postgres.New(cfg)
+	if err != nil {
+		log.Fatal(err)
 	}
 	// db.Get()
 

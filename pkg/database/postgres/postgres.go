@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
+	"github.com/nikandpro/kafka-fio-server/pkg/config"
 )
 
 func init() {
@@ -30,8 +31,8 @@ type User struct {
 	Patronymic string `json:"patronymic"`
 }
 
-func New() (*PostgresDB, error) {
-	connStr := ""
+func New(cfg *config.Config) (*PostgresDB, error) {
+	connStr := cfg.DBPath
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return &PostgresDB{}, err
