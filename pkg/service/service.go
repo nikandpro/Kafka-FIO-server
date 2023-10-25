@@ -32,7 +32,7 @@ func (s *Service) StartService() error {
 			return err
 		}
 
-		s.enrichment(user)
+		s.enrichment(&user)
 		// fmt.Println("kafka message: ", string(k))
 	}
 

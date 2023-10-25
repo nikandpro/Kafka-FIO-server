@@ -9,13 +9,12 @@ import (
 func InitRoutes() http.Handler {
 	rtr := mux.NewRouter()
 
-	// rtr.HandleFunc("/", handlers.Index).Methods("GET")
-	// rtr.HandleFunc("/create", handlers.Create).Methods("GET")
-	// rtr.HandleFunc("/save_article", handlers.Save_article).Methods("POST")
-	// rtr.HandleFunc("/post/{id:[0-9]+}", handlers.Show_post).Methods("GET")
-	// rtr.HandleFunc("/sign", handlers.Sign).Methods("GET")
-	// // rtr.HandleFunc("/user/{id:[0-9]+}", handlers.IndexUser).Methods("GET")
-	// rtr.HandleFunc("/sign_user", handlers.Sign_user).Methods("POST")
+	rtr.HandleFunc("/users", GetUsers).Methods("GET")
+	rtr.HandleFunc("/agify/{name}", GetAgify).Methods("GET")
+	// rtr.HandleFunc("/user/{id:[0-9]+}", GetUser).Methods("GET")
+	// rtr.HandleFunc("/user/", CreateUser).Methods("POST")
+	// rtr.HandleFunc("/user/{id:[0-9]+}", UpdateUser).Methods("UPDATE")
+	// rtr.HandleFunc("/user/{id:[0-9]+}", DeleteUser).Methods("DELETE")
 
 	// //authentication
 	// rtr.HandleFunc("/login", handlers.Login).Methods("POST")
