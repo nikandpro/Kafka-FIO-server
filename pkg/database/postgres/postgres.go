@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 
 	_ "github.com/lib/pq"
 	"github.com/nikandpro/kafka-fio-server/pkg/config"
@@ -29,6 +29,7 @@ func New(cfg *config.Config) (*PostgresDB, error) {
 	connStr := cfg.DBPath
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
+		log.Fatal("error New DB", err)
 		return &PostgresDB{}, err
 	}
 	return &PostgresDB{
@@ -39,7 +40,7 @@ func New(cfg *config.Config) (*PostgresDB, error) {
 func (db *PostgresDB) Get() error {
 	rows, err := db.connection.Query("select * from users")
 	if err != nil {
-		fmt.Println("error Get")
+		log.Fatal("error Get", err)
 		return err
 	}
 	defer rows.Close()
@@ -49,21 +50,26 @@ func (db *PostgresDB) Get() error {
 		u := database.User{}
 		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic)
 		if err != nil {
-			fmt.Println("error get next", err)
+			log.Fatal("error get next", err)
 			continue
 		}
 		users = append(users, u)
 	}
 
-	for _, u := range users {
-		fmt.Println(u.ID, u.Name, u.Surname, u.Patronymic)
-	}
+	// for _, u := range users {
+	// 	fmt.Println(u.ID, u.Name, u.Surname, u.Patronymic)
+	// }
 
 	return nil
 }
 
-func (db *PostgresDB) Create(json []byte) error {
-	fmt.Println("create:")
-	fmt.Println(string(json))
+func (db *PostgresDB) Create(database.User) error {
+	// insert, err := db.connection.Query("INSERT INTO articles (title, anons, full_text) VALUES ( ?, ?, ?)", post.Anons, post.Anons, post.FullText)
+	// if err != nil {
+	// 	log.Fatal("error Create ", err)
+	// 	return err
+	// }
+	// defer insert.Close()
+
 	return nil
 }

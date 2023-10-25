@@ -32,8 +32,12 @@ func (s *Service) StartService() error {
 			return err
 		}
 
-		s.enrichment(&user)
-		// fmt.Println("kafka message: ", string(k))
+		fmt.Println("kafka message: ", string(k))
+		s.enrichment(&user, "http://localhost:8081/agify/&name=")
+		s.enrichment(&user, "http://localhost:8081/genderize/&name=")
+		s.enrichment(&user, "http://localhost:8081/nationalize/&name=")
+
+		fmt.Println(user)
 	}
 
 	return nil

@@ -20,15 +20,15 @@ func IsCorrect(str []byte) (database.User, error) {
 	return user, nil
 }
 
-func (s *Service) enrichment(user *database.User) (database.User, error) {
-	resp, err := http.Get("http://localhost:8081/&name=" + user.Name)
+func (s *Service) enrichment(user *database.User, url string) (database.User, error) {
+	resp, err := http.Get(url + user.Name)
 	if err != nil {
 		log.Fatal("Bad request", err)
 	}
 
 	defer resp.Body.Close()
 
-	// json.Decoder(resp.Body).Decode(&result)
+	json.NewDecoder(resp.Body).Decode(user)
 
 	return *user, nil
 }

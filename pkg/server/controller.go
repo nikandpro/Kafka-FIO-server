@@ -7,20 +7,25 @@ import (
 
 // Временно для теста апи
 func GetAgify(w http.ResponseWriter, r *http.Request) {
-	exampleAgify := `{"agify":14}`
+	exampleAgify := `{
+		"agify": 12
+	}`
 	w.Write([]byte(exampleAgify))
 }
 
 func GetGenderize(w http.ResponseWriter, r *http.Request) {
-	exampleAgify := `{"genderize":"M"}`
-	w.Write([]byte(exampleAgify))
+	exampleGender := `{
+		"genderize": "Male"
+	}`
+	w.Write([]byte(exampleGender))
 }
 
 func GetNationalize(w http.ResponseWriter, r *http.Request) {
-	exampleAgify := `{"nationalize":"Russia"}`
-	w.Write([]byte(exampleAgify))
+	exampleNation := `{
+		"nationalize": "Russion"
+	}`
+	w.Write([]byte(exampleNation))
 }
-
 
 // controllers for rest api
 func GetUsers(w http.ResponseWriter, r *http.Request) {
