@@ -8,8 +8,11 @@ type Database interface {
 }
 
 type User struct {
-	ID         int64  `json:"id"`
-	Name       string `json:"name"`
-	Surname    string `json:"surname"`
-	Patronymic string `json:"patronymic"`
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Surname     string `json:"surname"`
+	Patronymic  string `json:"patronymic"`
+	Agify       int    `json:"agify"`
+	Genderize   string `json:"genderize"`
+	Nationalize string `json:"nationalize"`
 }

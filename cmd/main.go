@@ -8,6 +8,7 @@ import (
 	"github.com/nikandpro/kafka-fio-server/pkg/config"
 	"github.com/nikandpro/kafka-fio-server/pkg/database/postgres"
 	appKafka "github.com/nikandpro/kafka-fio-server/pkg/kafka"
+	"github.com/nikandpro/kafka-fio-server/pkg/server"
 	"github.com/nikandpro/kafka-fio-server/pkg/service"
 )
 
@@ -23,7 +24,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// db.Get()
 
 	ctx := context.Background()
 	dataKafka := make(chan []byte, 10)
@@ -36,6 +36,15 @@ func main() {
 		err := service.StartService()
 		if err != nil {
 			fmt.Println("service error ", err)
+		}
+	}()
+
+	server := server.NewServer(ctx)
+
+	go func() {
+		err := server.StartServer()
+		if err != nil {
+			log.Fatal("server error", err)
 		}
 	}()
 

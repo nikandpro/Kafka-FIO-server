@@ -21,7 +21,7 @@ func IsCorrect(str []byte) (database.User, error) {
 }
 
 func (s *Service) enrichment(user *database.User) (database.User, error) {
-	resp, err := http.Get("https://api.agify.io/&name=" + user.Name)
+	resp, err := http.Get("http://localhost:8081/&name=" + user.Name)
 	if err != nil {
 		log.Fatal("Bad request", err)
 	}
