@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -12,8 +13,23 @@ import (
 	"github.com/nikandpro/kafka-fio-server/pkg/service"
 )
 
+func init() {
+	cfg, err := config.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+	db, err := sql.Open("postgres", cfg.DBPath)
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), agify int, genderize varchar(50), nationalize varchar(50));")
+
+}
+
 func main() {
-	fmt.Println("start main...")
+	log.Println("start main...")
 
 	cfg, err := config.Init()
 	if err != nil {
@@ -24,8 +40,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	db.Get()
 
 	ctx := context.Background()
 	dataKafka := make(chan []byte, 10)

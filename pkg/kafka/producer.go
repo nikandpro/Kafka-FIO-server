@@ -10,7 +10,6 @@ import (
 )
 
 func Produce(ctx context.Context) {
-	fmt.Println("produce")
 	i := 0
 	jso := `
 	{

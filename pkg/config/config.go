@@ -20,10 +20,7 @@ type Errors struct {
 }
 
 func Init() (*Config, error) {
-	// cfg, err := LoadConfig(".env")
-	// if err != nil {
-	// 	log.Fatal("? Could not load environment variables", err)
-	// }
+
 	if err := setUpViper(); err != nil {
 		return nil, err
 	}

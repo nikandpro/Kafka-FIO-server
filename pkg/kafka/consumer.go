@@ -8,7 +8,6 @@ import (
 )
 
 func Consume(ctx context.Context, dataKafka chan []byte) {
-	fmt.Println("consume...")
 
 	conf := kafka.ReaderConfig{
 		Brokers:  []string{"localhost:9092"},

@@ -10,18 +10,6 @@ import (
 	"github.com/nikandpro/kafka-fio-server/pkg/database"
 )
 
-func init() {
-	connStr := ""
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-
-	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), agify int, genderize varchar(50), nationalize varchar(50));")
-
-}
-
 type PostgresDB struct {
 	connection *sql.DB
 }
