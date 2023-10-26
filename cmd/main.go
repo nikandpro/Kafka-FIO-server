@@ -25,6 +25,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	db.Get()
+
 	ctx := context.Background()
 	dataKafka := make(chan []byte, 10)
 	failDataKafka := make(chan string, 10)

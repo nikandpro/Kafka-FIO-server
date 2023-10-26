@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -17,7 +18,7 @@ func init() {
 	}
 	defer db.Close()
 
-	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50));")
+	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), agify int, genderize varchar(50), nationalize varchar(50));")
 
 }
 
@@ -26,8 +27,7 @@ type PostgresDB struct {
 }
 
 func New(cfg *config.Config) (*PostgresDB, error) {
-	connStr := cfg.DBPath
-	conn, err := sql.Open("postgres", connStr)
+	conn, err := sql.Open("postgres", cfg.DBPath)
 	if err != nil {
 		log.Fatal("error New DB", err)
 		return &PostgresDB{}, err
@@ -48,7 +48,7 @@ func (db *PostgresDB) Get() error {
 
 	for rows.Next() {
 		u := database.User{}
-		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic)
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Agify, &u.Genderize, &u.Nationalize)
 		if err != nil {
 			log.Fatal("error get next", err)
 			continue
@@ -56,20 +56,22 @@ func (db *PostgresDB) Get() error {
 		users = append(users, u)
 	}
 
-	// for _, u := range users {
-	// 	fmt.Println(u.ID, u.Name, u.Surname, u.Patronymic)
-	// }
+	for _, u := range users {
+		fmt.Println(u.ID, u.Name, u.Surname, u.Patronymic, u.Agify, u.Genderize, u.Nationalize)
+	}
 
 	return nil
 }
 
-func (db *PostgresDB) Create(database.User) error {
-	// insert, err := db.connection.Query("INSERT INTO articles (title, anons, full_text) VALUES ( ?, ?, ?)", post.Anons, post.Anons, post.FullText)
-	// if err != nil {
-	// 	log.Fatal("error Create ", err)
-	// 	return err
-	// }
-	// defer insert.Close()
+func (db *PostgresDB) Create(user database.User) error {
+	psgQuery := fmt.Sprintf(`insert into users(name, surname, patronymic, agify, genderize, nationalize) values ('%s', '%s', '%s', %d, '%s', '%s')`, user.Name, user.Surname, user.Patronymic, user.Agify, user.Genderize, user.Nationalize)
+	fmt.Println(psgQuery)
+	insert, err := db.connection.Query(psgQuery)
+	if err != nil {
+		log.Fatal("error Create ", err)
+		return err
+	}
+	defer insert.Close()
 
 	return nil
 }

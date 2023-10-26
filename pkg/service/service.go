@@ -38,6 +38,11 @@ func (s *Service) StartService() error {
 		s.enrichment(&user, "http://localhost:8081/nationalize/&name=")
 
 		fmt.Println(user)
+		err = s.db.Create(user)
+		if err != nil {
+			log.Panic(err)
+		}
+		// s.db.Create(user)
 	}
 
 	return nil

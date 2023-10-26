@@ -20,6 +20,10 @@ type Errors struct {
 }
 
 func Init() (*Config, error) {
+	// cfg, err := LoadConfig(".env")
+	// if err != nil {
+	// 	log.Fatal("? Could not load environment variables", err)
+	// }
 	if err := setUpViper(); err != nil {
 		return nil, err
 	}
@@ -45,11 +49,11 @@ func Init() (*Config, error) {
 func parseEnv(cfg *Config) error {
 	godotenv.Load(".env")
 
-	if err := viper.BindEnv("connection_db"); err != nil {
+	if err := viper.BindEnv("db"); err != nil {
 		return err
 	}
 
-	cfg.DBPath = viper.GetString("connection_db")
+	cfg.DBPath = viper.GetString("db")
 
 	return nil
 }
@@ -59,4 +63,20 @@ func setUpViper() error {
 	viper.SetConfigName("main")
 
 	return viper.ReadInConfig()
+}
+
+func LoadConfig(path string) (config Config, err error) {
+	viper.AddConfigPath("./")
+	viper.SetConfigType("env")
+	viper.SetConfigName("main")
+
+	viper.AutomaticEnv()
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		return
+	}
+
+	err = viper.Unmarshal(&config)
+	return
 }
