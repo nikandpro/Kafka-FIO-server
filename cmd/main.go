@@ -18,6 +18,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("init cfg")
 	db, err := sql.Open("postgres", cfg.DBPath)
 	if err != nil {
 		panic(err)
@@ -26,10 +27,14 @@ func init() {
 
 	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), agify int, genderize varchar(50), nationalize varchar(50));")
 
+	log.Println("migration db")
 }
 
 func main() {
-	log.Println("start main...")
+	log.Println("start...")
+	ctx := context.Background()
+	dataKafka := make(chan []byte, 10)
+	failDataKafka := make(chan string, 10)
 
 	cfg, err := config.Init()
 	if err != nil {
@@ -41,11 +46,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ctx := context.Background()
-	dataKafka := make(chan []byte, 10)
-	failDataKafka := make(chan string, 10)
+	go func() {
+		err := appKafka.Produce(ctx)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	go appKafka.Produce(ctx)
+	}()
 
 	service := service.NewService(ctx, dataKafka, failDataKafka, db)
 	go func() {
@@ -60,10 +67,13 @@ func main() {
 	go func() {
 		err := server.StartServer()
 		if err != nil {
-			log.Fatal("server error", err)
+			log.Fatal("server error ", err)
 		}
 	}()
 
-	appKafka.Consume(ctx, dataKafka)
+	err = appKafka.Consume(ctx, dataKafka)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

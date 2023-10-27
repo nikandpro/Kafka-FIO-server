@@ -36,7 +36,6 @@ func Init() (*Config, error) {
 	}
 
 	if err := parseEnv(&cfg); err != nil {
-
 		return nil, err
 	}
 
@@ -71,9 +70,13 @@ func LoadConfig(path string) (config Config, err error) {
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		return
+		return Config{}, err
 	}
 
 	err = viper.Unmarshal(&config)
-	return
+	if err != nil {
+		return Config{}, err
+	}
+
+	return Config{}, nil
 }

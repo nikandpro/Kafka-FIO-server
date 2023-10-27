@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/nikandpro/kafka-fio-server/pkg/database"
 )
@@ -28,7 +27,6 @@ func (s *Service) StartService() error {
 
 		user, err := IsCorrect(k)
 		if err != nil {
-			log.Fatal("Not Correct user", err)
 			return err
 		}
 
@@ -39,7 +37,7 @@ func (s *Service) StartService() error {
 
 		err = s.db.CreateUser(user)
 		if err != nil {
-			log.Panic(err)
+			return err
 		}
 	}
 

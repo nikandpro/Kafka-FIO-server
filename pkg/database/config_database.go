@@ -6,8 +6,6 @@ type Database interface {
 	CreateUser(User) error
 	UpdateUser(user User, id string) error
 	DeleteUser(id string) error
-	// Delete(id string)
-	// Update(id string)
 }
 
 type User struct {

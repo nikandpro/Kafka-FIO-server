@@ -2,14 +2,13 @@ package kafka
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/segmentio/kafka-go"
 )
 
-func Produce(ctx context.Context) {
+func Produce(ctx context.Context) error {
 	i := 0
 	jso := `
 	{
@@ -31,7 +30,7 @@ func Produce(ctx context.Context) {
 			Value: []byte(jso),
 		})
 		if err != nil {
-			fmt.Println("Some produce eroor: ", err)
+			return err
 		}
 		i++
 		time.Sleep(time.Second * 5)

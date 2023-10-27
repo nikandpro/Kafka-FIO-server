@@ -2,12 +2,11 @@ package kafka
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/segmentio/kafka-go"
 )
 
-func Consume(ctx context.Context, dataKafka chan []byte) {
+func Consume(ctx context.Context, dataKafka chan []byte) error {
 
 	conf := kafka.ReaderConfig{
 		Brokers:  []string{"localhost:9092"},
@@ -20,9 +19,8 @@ func Consume(ctx context.Context, dataKafka chan []byte) {
 	for {
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
-			fmt.Print("Consume error: ", err)
+			return err
 		}
 		dataKafka <- m.Value
-		// fmt.Println("Message is: ", string(m.Value))
 	}
 }

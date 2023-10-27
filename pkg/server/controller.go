@@ -39,7 +39,7 @@ func (s *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	json_data, err := json.Marshal(users)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	w.Write(json_data)
 
@@ -53,7 +53,7 @@ func (s *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	json_data, err := json.Marshal(user)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	w.Write(json_data)
 }
@@ -63,7 +63,7 @@ func (s *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user = database.User{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Fatal("bad json", err)
+		log.Fatal(err)
 	}
 	err = s.db.CreateUser(user)
 	if err != nil {
@@ -73,12 +73,11 @@ func (s *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	log.Println("update api")
 	id := mux.Vars(r)
 	var user = database.User{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		log.Fatal("bad json", err)
+		log.Fatal(err)
 	}
 	err = s.db.UpdateUser(user, id["id"])
 	if err != nil {

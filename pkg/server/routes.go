@@ -15,6 +15,8 @@ func (s *Server) InitRoutes() http.Handler {
 	rtr.HandleFunc("/genderize/{name}", GetGenderize).Methods("GET")
 	rtr.HandleFunc("/nationalize/{name}", GetNationalize).Methods("GET")
 
+	// CRUD for user
+
 	rtr.HandleFunc("/users", s.GetUsers).Methods("GET")
 	rtr.HandleFunc("/user/{id:[0-9]+}", s.GetUser).Methods("GET")
 	rtr.HandleFunc("/user", s.CreateUser).Methods("POST")
