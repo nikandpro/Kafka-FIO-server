@@ -34,7 +34,7 @@ func (db *PostgresDB) GetUsers() ([]database.User, error) {
 
 	for rows.Next() {
 		u := database.User{}
-		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Agify, &u.Genderize, &u.Nationalize)
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender, &u.Country)
 		if err != nil {
 			log.Fatal(err)
 			continue
@@ -54,7 +54,7 @@ func (db *PostgresDB) GetUser(id string) (database.User, error) {
 	u := database.User{}
 
 	for rows.Next() {
-		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Agify, &u.Genderize, &u.Nationalize)
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender, &u.Country)
 		if err != nil {
 			log.Fatal(err)
 			continue
@@ -65,7 +65,7 @@ func (db *PostgresDB) GetUser(id string) (database.User, error) {
 }
 
 func (db *PostgresDB) CreateUser(user database.User) error {
-	psgQuery := fmt.Sprintf(`insert into users(name, surname, patronymic, agify, genderize, nationalize) values ('%s', '%s', '%s', %d, '%s', '%s')`, user.Name, user.Surname, user.Patronymic, user.Agify, user.Genderize, user.Nationalize)
+	psgQuery := fmt.Sprintf(`insert into users(name, surname, patronymic, age, gender, country) values ('%s', '%s', '%s', %d, '%s', '%s')`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender, user.Country)
 	insert, err := db.connection.Query(psgQuery)
 	if err != nil {
 		return err
@@ -80,10 +80,10 @@ func (db *PostgresDB) UpdateUser(user database.User, id string) error {
 	set name='%s',
 	surname='%s',
 	patronymic='%s',
-	agify=%d,
-	genderize='%s',
-	nationalize='%s'
-	where id = %s`, user.Name, user.Surname, user.Patronymic, user.Agify, user.Genderize, user.Nationalize, id)
+	age=%d,
+	gender='%s',
+	country='%s'
+	where id = %s`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender, user.Country, id)
 	update, err := db.connection.Query(psgQuery)
 	if err != nil {
 		return err

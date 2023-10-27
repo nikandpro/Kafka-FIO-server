@@ -25,7 +25,7 @@ func init() {
 	}
 	defer db.Close()
 
-	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), agify int, genderize varchar(50), nationalize varchar(50));")
+	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), age int, gender varchar(50), country varchar(50));")
 
 	log.Println("migration db")
 }
