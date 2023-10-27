@@ -55,7 +55,7 @@ func main() {
 		}
 	}()
 
-	server := server.NewServer(ctx)
+	server := server.NewServer(ctx, db, *cfg)
 
 	go func() {
 		err := server.StartServer()
