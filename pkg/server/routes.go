@@ -9,12 +9,6 @@ import (
 func (s *Server) InitRoutes() http.Handler {
 	rtr := mux.NewRouter()
 
-	//testing enrich api
-
-	rtr.HandleFunc("/agify/{name}", GetAgify).Methods("GET")
-	rtr.HandleFunc("/genderize/{name}", GetGenderize).Methods("GET")
-	rtr.HandleFunc("/nationalize/{name}", GetNationalize).Methods("GET")
-
 	// CRUD for user
 
 	rtr.HandleFunc("/users", s.GetUsers).Methods("GET")
