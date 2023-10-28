@@ -27,6 +27,5 @@ func (s *Service) enrichment(user *database.User, url string) (database.User, er
 	defer resp.Body.Close()
 
 	json.NewDecoder(resp.Body).Decode(user)
-
 	return *user, nil
 }

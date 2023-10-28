@@ -34,7 +34,7 @@ func (db *PostgresDB) GetUsers() ([]database.User, error) {
 
 	for rows.Next() {
 		u := database.User{}
-		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender, &u.Country)
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender)
 		if err != nil {
 			log.Fatal(err)
 			continue
@@ -54,7 +54,7 @@ func (db *PostgresDB) GetUser(id string) (database.User, error) {
 	u := database.User{}
 
 	for rows.Next() {
-		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender, &u.Country)
+		err := rows.Scan(&u.ID, &u.Name, &u.Surname, &u.Patronymic, &u.Age, &u.Gender)
 		if err != nil {
 			log.Fatal(err)
 			continue
@@ -65,12 +65,27 @@ func (db *PostgresDB) GetUser(id string) (database.User, error) {
 }
 
 func (db *PostgresDB) CreateUser(user database.User) error {
-	psgQuery := fmt.Sprintf(`insert into users(name, surname, patronymic, age, gender, country) values ('%s', '%s', '%s', %d, '%s', '%s')`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender, user.Country)
-	insert, err := db.connection.Query(psgQuery)
+	psgQuery := fmt.Sprintf(`insert into users(name, surname, patronymic, age, gender) values ('%s', '%s', '%s', '%d', '%s') returning id`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender)
+	insert, err := db.connection.Prepare(psgQuery)
 	if err != nil {
 		return err
 	}
+
+	err = insert.QueryRow().Scan(&user.ID)
+	if err != nil {
+		return err
+	}
+
 	defer insert.Close()
+	for _, c := range user.Country {
+		db.CreateCountry(c)
+		err = db.CreateUser_Country(user.ID, c.ID)
+		if err != nil {
+			log.Fatal("don", err)
+			return err
+		}
+
+	}
 
 	return nil
 }
@@ -81,9 +96,8 @@ func (db *PostgresDB) UpdateUser(user database.User, id string) error {
 	surname='%s',
 	patronymic='%s',
 	age=%d,
-	gender='%s',
-	country='%s'
-	where id = %s`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender, user.Country, id)
+	gender='%s'
+	where id = %s`, user.Name, user.Surname, user.Patronymic, user.Age, user.Gender, id)
 	update, err := db.connection.Query(psgQuery)
 	if err != nil {
 		return err
@@ -99,6 +113,30 @@ func (db *PostgresDB) DeleteUser(id string) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (db *PostgresDB) CreateCountry(country database.Country) error {
+	psgQuery := fmt.Sprintf(`insert into country(id, probability) values ('%s', '%f')`, country.ID, country.Probability)
+	insert, err := db.connection.Query(psgQuery)
+	if err != nil {
+		return err
+	}
+
+	defer insert.Close()
+
+	return nil
+}
+
+func (db *PostgresDB) CreateUser_Country(user_id int, country_id string) error {
+	psgQuery := fmt.Sprintf(`insert into users_country(user_id, country_id) values ('%d', '%s')`, user_id, country_id)
+	insert, err := db.connection.Query(psgQuery)
+	if err != nil {
+		return err
+	}
+
+	defer insert.Close()
 
 	return nil
 }

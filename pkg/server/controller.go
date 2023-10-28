@@ -11,23 +11,17 @@ import (
 
 // Временно для теста апи
 func GetAgify(w http.ResponseWriter, r *http.Request) {
-	exampleAgify := `{
-		"agify": 12
-	}`
+	exampleAgify := `{"count":3800,"name":"Dmitriy","age":42}`
 	w.Write([]byte(exampleAgify))
 }
 
 func GetGenderize(w http.ResponseWriter, r *http.Request) {
-	exampleGender := `{
-		"genderize": "Male"
-	}`
+	exampleGender := `{"count":25459,"name":"Dmitriy","gender":"male","probability":1.0}`
 	w.Write([]byte(exampleGender))
 }
 
 func GetNationalize(w http.ResponseWriter, r *http.Request) {
-	exampleNation := `{
-		"nationalize": "Russion"
-	}`
+	exampleNation := `{"count":24968,"name":"Dmitriy","country":[{"country_id":"UA","probability":0.419},{"country_id":"RU","probability":0.291},{"country_id":"KZ","probability":0.097},{"country_id":"BY","probability":0.069},{"country_id":"IL","probability":0.019}]}`
 	w.Write([]byte(exampleNation))
 }
 

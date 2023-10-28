@@ -33,6 +33,6 @@ func Produce(ctx context.Context) error {
 			return err
 		}
 		i++
-		time.Sleep(time.Second * 5)
+		time.Sleep(time.Second * 10)
 	}
 }

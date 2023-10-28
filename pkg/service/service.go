@@ -31,9 +31,9 @@ func (s *Service) StartService() error {
 		}
 
 		// fmt.Println("kafka message: ", string(k))
-		s.enrichment(&user, "https://api.agify.io/?name=")
-		s.enrichment(&user, "https://api.genderize.io/?name=")
-		s.enrichment(&user, "https://api.nationalize.io/?name=")
+		s.enrichment(&user, "http://localhost:8081/agify/&name=")
+		s.enrichment(&user, "http://localhost:8081/genderize/&name=")
+		s.enrichment(&user, "http://localhost:8081/nationalize/&name=")
 
 		err = s.db.CreateUser(user)
 		if err != nil {

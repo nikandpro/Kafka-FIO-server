@@ -25,10 +25,13 @@ func init() {
 	}
 	defer db.Close()
 
-	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), age int, gender varchar(50), country varchar(50));")
-
+	db.Exec("create table users(id serial primary key, name varchar(50), surname varchar(50), patronymic varchar(50), age int, gender varchar(50));")
+	db.Exec("create table country(id VARCHAR(50) UNIQUE, probability float);")
+	db.Exec("create table users_country(id serial primary key, user_id int, country_id varchar(50), foreign key (user_id) references users (id), foreign key (country_id) references country (id));")
 	log.Println("migration db")
 }
+
+//create table users_country(id serial primary key, user_id int, country_id varchar(50), foreign key (user_id) references users (id), foreign key (country_id) references country (id));
 
 func main() {
 	log.Println("start...")
